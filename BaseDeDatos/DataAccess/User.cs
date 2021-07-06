@@ -16,7 +16,7 @@ namespace BaseDeDatos.DataAccess
 
         [Required]
         [Column("IDENTIFICACION")]
-        public int Identity { get; set; }
+        public decimal Identity { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -30,7 +30,7 @@ namespace BaseDeDatos.DataAccess
 
         [Required]
         [Column("CELULAR")]
-        public int Cel { get; set; }
+        public decimal Cel { get; set; }
 
         [Required]
         [Column("CORREO")]

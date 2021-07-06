@@ -38,7 +38,7 @@ namespace BaseDeDatos.Controllers
         {
             try
             {
-                var users = await _context.Users.FindAsync(id);
+                var users = await _context.Users.FirstAsync(u => u.Identity == id);
                 return Ok(users);
 
             }
@@ -47,7 +47,7 @@ namespace BaseDeDatos.Controllers
                 return BadRequest(ex.Message);
             }
         }
-     
+
 
         /// <summary>
         /// Se utiliza [FromBody para que todo vaya en el json lo que se envia]
@@ -55,12 +55,12 @@ namespace BaseDeDatos.Controllers
         /// <param name="users"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult PostUsers([FromBody] User users)
+        public async Task<ActionResult<User>> PostUsers(User users)
         {
             try
             {
                 _context.Users.Add(users);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 return CreatedAtAction(nameof(GetUsers), new { Identity = users.Identity }, users);
             }
@@ -80,9 +80,12 @@ namespace BaseDeDatos.Controllers
 
             _context.Entry(users).State = EntityState.Modified;
 
+
+
             try
             {
                 await _context.SaveChangesAsync();
+                return Ok(users);
             }
             catch (DbUpdateConcurrencyException)
             {
