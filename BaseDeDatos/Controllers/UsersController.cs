@@ -25,6 +25,7 @@ namespace BaseDeDatos.Controllers
         {
             try
             {
+               
                 return Ok(_context.Users.ToList());
             }
             catch (Exception ex)
@@ -33,12 +34,12 @@ namespace BaseDeDatos.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = nameof(GetUsers))]
-        public async Task<ActionResult<User>> GetUsers(int id)
+        [HttpGet("{identity}", Name = nameof(GetUsers))]
+        public async Task<ActionResult<User>> GetUsers(int identity)
         {
             try
             {
-                var users = await _context.Users.FirstAsync(u => u.Identity == id);
+                var users = await _context.Users.FirstAsync(u => u.Identity == identity);
                 return Ok(users);
 
             }
@@ -70,17 +71,15 @@ namespace BaseDeDatos.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsers(int id, User users)
+        [HttpPut("{identity}")]
+        public async Task<IActionResult> PutUsers(int identity, User users)
         {
-            if (id != users.Identity)
+            if (identity != users.Identity)
             {
                 return BadRequest();
             }
 
             _context.Entry(users).State = EntityState.Modified;
-
-
 
             try
             {
@@ -89,7 +88,7 @@ namespace BaseDeDatos.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UsersExists(id))
+                if (!UsersExists(identity))
                 {
                     return NotFound();
                 }
@@ -103,16 +102,16 @@ namespace BaseDeDatos.Controllers
         }
 
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsers(int id)
+        [HttpDelete("{identity}")]
+        public async Task<IActionResult> DeleteUsers(int identity)
         {
-            var users = await _context.Users.FindAsync(id);
-            if (users == null)
+            var user = await _context.Users.FirstAsync(u => u.Identity == identity);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(users);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return NoContent();
