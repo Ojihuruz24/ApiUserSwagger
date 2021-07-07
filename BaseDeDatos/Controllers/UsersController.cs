@@ -114,7 +114,7 @@ namespace BaseDeDatos.Controllers
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(user);
         }
 
         private bool UsersExists(int id)
