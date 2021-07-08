@@ -38,7 +38,7 @@ namespace BaseDeDatos.Controllers
         public async Task<ActionResult<User>> GetUsers(int identity)
         {
             try
-            {
+            { 
                 var users = await _context.Users.FirstAsync(u => u.Identity == identity);
                 return Ok(users);
 
@@ -49,12 +49,6 @@ namespace BaseDeDatos.Controllers
             }
         }
 
-
-        /// <summary>
-        /// Se utiliza [FromBody para que todo vaya en el json lo que se envia]
-        /// </summary>
-        /// <param name="users"></param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<User>> PostUsers(User users)
         {
@@ -101,20 +95,26 @@ namespace BaseDeDatos.Controllers
             return NoContent();
         }
 
-
         [HttpDelete("{identity}")]
         public async Task<IActionResult> DeleteUsers(int identity)
         {
-            var user = await _context.Users.FirstAsync(u => u.Identity == identity);
-            if (user == null)
+            try
+            {
+                var user = await _context.Users.FirstAsync(u => u.Identity == identity);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+
+                return Ok(user);
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return Ok(user);
         }
 
         private bool UsersExists(int id)

@@ -11,10 +11,6 @@ namespace BaseDeDatos.DataAccess
     public class User
     {
         [Key]
-        [Column("ID")]
-        public int Id { get; set; }
-
-        [Required]
         [Column("IDENTIFICACION")]
         public decimal Identity { get; set; }
 
